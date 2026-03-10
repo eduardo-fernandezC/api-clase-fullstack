@@ -1,0 +1,12 @@
+para poder hacer un post de un usuario 
+se necesita acceder a esta url
+
+http://localhost:8080/user/post-user
+
+y el JSON debe tener estos parametros
+
+{
+    "username": "eduardo",
+    "email": "eduardo@gmail.com",
+    "password": "123456"
+}
