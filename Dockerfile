@@ -1,5 +1,5 @@
-FROM openjdk:17-ea
+FROM eclipse-temurin:17-jdk
 WORKDIR /app
-COPY . .
+COPY target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]git
+ENTRYPOINT ["java", "-jar", "app.jar"]
