@@ -1,5 +1,19 @@
-FROM eclipse-temurin:21-jdk
+FROM gradle:8.14.3-jdk24 AS builder
+
+WORKDIR /workspace
+COPY . .
+RUN gradle bootJar --no-daemon
+
+FROM eclipse-temurin:24-jre
+
 WORKDIR /app
-COPY target/*.jar app.jar
+
+# Copiamos solo el artefacto final desde el stage de build
+COPY --from=builder /workspace/build/libs/*.jar app.jar
+
+# Usuario no-root ya disponible en la imagen base
+USER nobody
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+CMD ["java", "-jar", "app.jar"]
