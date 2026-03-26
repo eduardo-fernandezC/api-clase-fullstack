@@ -1,0 +1,72 @@
+GUIA PARA LLEVAR PROYECTO DOCKER A OTRO PC (OPCION 1)
+
+1.  GUARDAR LA IMAGEN EN TU PC ACTUAL
+
+Ejecuta en la terminal: docker save -o api.tar ejemplo
+
+Esto generará un archivo llamado: api.tar
+
+------------------------------------------------------------------------
+
+2.  TRANSFERIR ARCHIVO
+
+Copia el archivo api.tar a: - Pendrive - Google Drive - Otro medio
+
+------------------------------------------------------------------------
+
+3.  EN EL OTRO PC
+
+3.1 Instalar Docker (si no está instalado)
+
+3.2 Cargar la imagen:
+
+docker load -i api.tar
+
+------------------------------------------------------------------------
+
+4.  CREAR RED
+
+docker network create mi-red
+
+(Si ya existe, ignora el error)
+
+------------------------------------------------------------------------
+
+5.  LEVANTAR MYSQL
+
+docker run -d –name mysql-db –network mi-red -e MYSQL_ROOT_PASSWORD=1234
+-e MYSQL_DATABASE=apiClase -p 3306:3306 mysql:8
+
+------------------------------------------------------------------------
+
+6.  LEVANTAR API
+
+docker run -d –name api –network mi-red -p 8080:8080 ejemplo
+
+------------------------------------------------------------------------
+
+7.  VERIFICAR
+
+docker ps
+
+------------------------------------------------------------------------
+
+8.  PROBAR EN NAVEGADOR
+
+http://localhost:8080
+
+(o el endpoint que tengas, ejemplo: /users)
+
+------------------------------------------------------------------------
+
+NOTAS IMPORTANTES
+
+-   No necesitas reconstruir la imagen
+-   La base de datos se crea automáticamente
+-   Si algo falla, revisa logs:
+
+docker logs api docker logs mysql-db
+
+------------------------------------------------------------------------
+
+FIN
