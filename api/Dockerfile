@@ -1,19 +1,17 @@
-FROM gradle:8.14.3-jdk24 AS builder
+FROM maven:3.9.9-eclipse-temurin-24 AS builder
 
 WORKDIR /workspace
-COPY . .
-RUN gradle bootJar --no-daemon
+COPY pom.xml .
+COPY src ./src
+
+# Genera el jar (omite tests para build más rápido en imagen)
+RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:24-jre
 
 WORKDIR /app
+COPY --from=builder /workspace/target/*.jar app.jar
 
-# Copiamos solo el artefacto final desde el stage de build
-COPY --from=builder /workspace/build/libs/*.jar app.jar
-
-# Usuario no-root ya disponible en la imagen base
 USER nobody
-
 EXPOSE 8080
-
 CMD ["java", "-jar", "app.jar"]
